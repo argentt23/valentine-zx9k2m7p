@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 💖</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Garamond', serif;
+            overflow-x: hidden;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 50%, #ffd4e5 100%);
+            position: relative;
+            transition: background 0.8s ease;
+        }
+
+        body.white-bg {
+            background: #ffffff;
+        }
+
+        /* Floating Hearts Animation */
+        .heart-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: floatUp 8s infinite ease-in;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Intro Section */
+        .intro-section {
+            text-align: center;
+            animation: fadeIn 1s ease-in;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .intro-section.hidden {
+            display: none;
+        }
+
+        .intro-heading {
+            font-size: clamp(2.5rem, 10vw, 6rem);
+            color: #d4336f;
+            margin-bottom: 50px;
+            text-shadow: 3px 3px 6px rgba(212, 51, 111, 0.2);
+            line-height: 1.2;
+            animation: pulse 2s ease-in-out infinite;
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+        }
+
+        .continue-hint {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: #a8305e;
+            font-style: italic;
+            margin-top: 50px;
+            opacity: 0;
+            animation: fadeInDelay 1s ease-in 2s forwards;
+            cursor: pointer;
+        }
+
+        @keyframes fadeInDelay {
+            to {
+                opacity: 0.7;
+            }
+        }
+
+        /* Question Section */
+        .question-section {
+            text-align: center;
+            animation: fadeIn 1s ease-in;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .question-section.active {
+            display: block;
+        }
+
+        .question-section.hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-heading {
+            font-size: clamp(2rem, 8vw, 4.5rem);
+            color: #d4336f;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(212, 51, 111, 0.1);
+            line-height: 1.3;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            10% {
+                transform: scale(1.05);
+            }
+            20% {
+                transform: scale(1);
+            }
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: #a8305e;
+            margin-bottom: 50px;
+            font-style: italic;
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 300px;
+        }
+
+        /* Cat Button Styles */
+        .cat-btn {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            max-width: 250px;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.15));
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .cat-btn:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 12px 30px rgba(255, 23, 68, 0.4));
+        }
+
+        .cat-btn.btn-yes {
+            z-index: 2;
+        }
+
+        .cat-btn.btn-no {
+            z-index: 1;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Love Message Section */
+        .love-section {
+            text-align: center;
+            max-width: 100%;
+            width: 100%;
+            height: 100vh;
+            margin: 0 auto;
+            animation: revealLove 1s ease-in;
+            display: none;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .love-section.active {
+            display: block;
+        }
+
+        @keyframes revealLove {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Image Gallery - Random Positioning */
+        .image-gallery {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .gallery-item {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            max-width: 250px;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.15));
+        }
+
+        /* Center flower */
+        .gallery-item.center {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 350px;
+        }
+
+        .gallery-item.center:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        /* Random positions for other images */
+        .gallery-item.pos-1 {
+            top: 5%;
+            left: 3%;
+        }
+
+        .gallery-item.pos-2 {
+            top: 5%;
+            right: 3%;
+        }
+
+        .gallery-item.pos-3 {
+            bottom: 5%;
+            left: 3%;
+        }
+
+        .gallery-item.pos-4 {
+            bottom: 5%;
+            right: 3%;
+        }
+
+        .gallery-item.bottom-center {
+            bottom: 1%;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 400px;
+        }
+
+        .gallery-item.bottom-center:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        .gallery-item.decorative {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .gallery-item.decorative:hover {
+            transform: translateX(-50%) scale(1);
+        }
+
+        .hover-text {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            color: #d4336f;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            width: 200px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-style: italic;
+            white-space: normal;
+        }
+
+        .gallery-item:hover .hover-text {
+            opacity: 1;
+        }
+
+        /* Position text boxes away from other images */
+        .gallery-item.pos-1 .hover-text {
+            top: 100%;
+            left: 0;
+            margin-top: 10px;
+            transform: none;
+        }
+
+        .gallery-item.pos-2 .hover-text {
+            top: 100%;
+            right: 0;
+            left: auto;
+            margin-top: 10px;
+            transform: none;
+        }
+
+        .gallery-item.pos-3 .hover-text {
+            bottom: 100%;
+            left: 0;
+            margin-bottom: 10px;
+            transform: none;
+        }
+
+        .gallery-item.pos-4 .hover-text {
+            bottom: 100%;
+            right: 0;
+            left: auto;
+            margin-bottom: 10px;
+            transform: none;
+        }
+
+        .gallery-item.center .hover-text {
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+        }
+
+        /* Heart Burst Animation */
+        .heart-burst {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .burst-heart {
+            position: absolute;
+            font-size: 80px;
+            animation: burstOut 1s ease-out forwards;
+        }
+
+        @keyframes burstOut {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Sparkle Effect */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkleAnim 1.5s ease-out forwards;
+        }
+
+        @keyframes sparkleAnim {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) translateY(-50px);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .button-container {
+                min-height: 250px;
+                gap: 20px;
+            }
+
+            .cat-btn {
+                max-width: 180px;
+            }
+
+            .gallery-item {
+                max-width: 120px;
+            }
+
+            .gallery-item.center {
+                max-width: 160px;
+            }
+
+            .gallery-item.pos-1 {
+                top: 5%;
+                left: 3%;
+            }
+
+            .gallery-item.pos-2 {
+                top: 5%;
+                right: 3%;
+            }
+
+            .gallery-item.pos-3 {
+                bottom: 20%;
+                left: 3%;
+            }
+
+            .gallery-item.pos-4 {
+                bottom: 20%;
+                right: 3%;
+            }
+
+            .gallery-item.bottom-center {
+                bottom: 3%;
+                max-width: 100px;
+            }
+
+            .hover-text {
+                font-size: 0.7rem;
+                padding: 8px 10px;
+                width: 140px;
+            }
+
+            .gallery-item.center .hover-text {
+                width: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Hearts Background -->
+    <div class="heart-container" id="heartContainer"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Intro Section -->
+        <div class="intro-section" id="introSection">
+            <h1 class="intro-heading">I have something important to ask you</h1>
+            <p class="continue-hint" id="continueHint">Click anywhere to continue...</p>
+        </div>
+
+        <!-- Question Section -->
+        <div class="question-section" id="questionSection">
+            <h1 class="main-heading">Will you be my Valentine? 💖</h1>
+            
+            <div class="button-container" id="buttonContainer">
+                <img src="images/YES.png" alt="Yes" class="cat-btn btn-yes" id="yesBtn">
+                <img src="images/NO.png" alt="No" class="cat-btn btn-no" id="noBtn">
+            </div>
+        </div>
+
+        <!-- Love Message Section (Hidden Initially) -->
+        <div class="love-section" id="loveSection">
+            <div class="image-gallery">
+                <div class="gallery-item pos-1">
+                    <img src="images/bda.png" alt="Black Dress">
+                    <div class="hover-text">Your elegance takes my breath away. You're the most stunning person I've ever known.</div>
+                </div>
+                <div class="gallery-item pos-2">
+                    <img src="images/wda.png" alt="White Dress">
+                    <div class="hover-text">Pure, radiant, and absolutely beautiful. You light up every room you enter.</div>
+                </div>
+                <div class="gallery-item pos-3">
+                    <img src="images/pda.png" alt="Pink Dress">
+                    <div class="hover-text">You make my heart skip a beat. Every moment with you feels like a dream.</div>
+                </div>
+                <div class="gallery-item center">
+                    <img src="images/flow.png" alt="Flowers">
+                    <div class="hover-text">Like these flowers, my love for you blooms more beautifully with each passing day.</div>
+                </div>
+                <div class="gallery-item pos-4">
+                    <img src="images/monke.png" alt="Monkey">
+                    <div class="hover-text">You make me smile like this every single day. Thank you for being my happiness.</div>
+                </div>
+                <div class="gallery-item bottom-center decorative">
+                    <img src="images/CAT2.png" alt="Walking Cat">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle intro to question transition
+        const introSection = document.getElementById('introSection');
+        const questionSection = document.getElementById('questionSection');
+        const continueHint = document.getElementById('continueHint');
+
+        // After 3 seconds or on click, transition to question
+        let canProceed = false;
+        setTimeout(() => {
+            canProceed = true;
+        }, 3000);
+
+        function proceedToQuestion() {
+            if (canProceed) {
+                introSection.classList.add('hidden');
+                questionSection.classList.add('active');
+            }
+        }
+
+        // Click anywhere to proceed
+        document.body.addEventListener('click', proceedToQuestion);
+        continueHint.addEventListener('click', proceedToQuestion);
+
+        // Create floating hearts background
+        function createFloatingHearts() {
+            const container = document.getElementById('heartContainer');
+            const heartEmojis = ['💕', '💖', '💗', '💓', '💝', '❤️', '💞', '💟', '💌', '💘'];
+            
+            setInterval(() => {
+                // Create 2-3 hearts at once
+                const heartsToCreate = Math.floor(Math.random() * 2) + 2;
+                
+                for (let i = 0; i < heartsToCreate; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'floating-heart';
+                    heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                    heart.style.animationDelay = Math.random() * 2 + 's';
+                    heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
+                    container.appendChild(heart);
+                    
+                    // Remove heart after animation
+                    setTimeout(() => heart.remove(), 12000);
+                }
+            }, 400);
+        }
+
+        // No button movement logic
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const buttonContainer = document.getElementById('buttonContainer');
+
+        // Track if images have been swapped
+        let noSwapped = false;
+        let yesSwapped = false;
+
+        // Handle hover on No button - only swap image, don't move
+        noBtn.addEventListener('mouseenter', (e) => {
+            noBtn.src = 'images/ANGRY.png';
+            noSwapped = true;
+        });
+
+        // Handle cursor leaving No button - swap back to NO
+        noBtn.addEventListener('mouseleave', (e) => {
+            noBtn.src = 'images/NO.png';
+            noSwapped = false;
+        });
+
+        // Yes button click handler
+        yesBtn.addEventListener('click', (e) => {
+            // Swap to calm cat image
+            if (!yesSwapped) {
+                yesBtn.src = 'images/CAT.png';
+                yesSwapped = true;
+            }
+            
+            // Create heart burst effect
+            createHeartBurst(e.clientX, e.clientY);
+            
+            // Hide question section and show love section
+            setTimeout(() => {
+                document.getElementById('questionSection').classList.add('hidden');
+                document.getElementById('loveSection').classList.add('active');
+                
+                // Change background to white
+                document.body.classList.add('white-bg');
+                
+                // Create celebration sparkles
+                createSparkles();
+            }, 800);
+        });
+
+        // Heart burst effect
+        function createHeartBurst(x, y) {
+            const burst = document.createElement('div');
+            burst.className = 'heart-burst';
+            burst.style.left = x + 'px';
+            burst.style.top = y + 'px';
+            document.body.appendChild(burst);
+            
+            const heartEmojis = ['💕', '💖', '💗', '💓', '💝', '❤️', '💞'];
+            
+            for (let i = 0; i < 12; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'burst-heart';
+                heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                
+                const angle = (i / 12) * Math.PI * 2;
+                const distance = 100 + Math.random() * 50;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                heart.style.setProperty('--tx', tx + 'px');
+                heart.style.setProperty('--ty', ty + 'px');
+                heart.style.animationDelay = (i * 0.05) + 's';
+                
+                burst.appendChild(heart);
+            }
+            
+            setTimeout(() => burst.remove(), 2000);
+        }
+
+        // Sparkle effect
+        function createSparkles() {
+            const container = document.querySelector('.love-section');
+            
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.top = Math.random() * 100 + '%';
+                    sparkle.style.animationDelay = Math.random() * 0.5 + 's';
+                    container.appendChild(sparkle);
+                    
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, i * 100);
+            }
+        }
+
+        // Initialize
+        createFloatingHearts();
+    </script>
+</body>
+</html>
